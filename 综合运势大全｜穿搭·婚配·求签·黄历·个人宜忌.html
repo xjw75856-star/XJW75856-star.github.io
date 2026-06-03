@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>综合运势大全｜穿搭·婚配·求签·黄历·个人宜忌</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+body{background:linear-gradient(135deg,#fff5f7 0%,#fefaf0 100%);min-height:100vh;padding:20px}
+.container{max-width:820px;margin:0 auto}
+header{text-align:center;margin-bottom:24px}
+header h1{font-size:28px;color:#d65a5a;margin-bottom:8px}
+.subtitle{color:#777;font-size:15px}
+/* 标签栏 */
+.tabs{display:flex;gap:6px;margin-bottom:20px;background:#fff;padding:10px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,0.05);flex-wrap:wrap}
+.tab{flex:1;min-width:110px;text-align:center;padding:10px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:#555}
+.tab.active{background:#e57373;color:#fff}
+/* 卡片通用 */
+.card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,0.06);margin-bottom:20px}
+.title{font-size:18px;color:#d65a5a;text-align:center;margin-bottom:20px;font-weight:bold}
+/* 星座/生肖选择 */
+.select-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.item{width:66px;padding:8px 4px;background:#f8f8f8;border-radius:10px;text-align:center;cursor:pointer;transition:.3s;font-size:14px}
+.item.active,.item:hover{background:#e57373;color:#fff}
+/* 运势网格 */
+.luck-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.luck-item{background:#fff5f5;padding:10px;border-radius:10px}
+.luck-item .label{font-size:14px;color:#666}
+.luck-item .text{font-size:15px;color:#333;margin-top:4px}
+.wear-item{margin-bottom:10px;font-size:15px;line-height:1.6}
+.wear-item strong{color:#e57373}
+/* 婚配选择 */
+.form-row{display:flex;gap:16px;margin-bottom:20px}
+.form-col{flex:1}
+.form-col label{display:block;margin-bottom:8px;font-size:15px;color:#555}
+select,input[type="date"]{width:100%;padding:10px 12px;border:1px solid #eee;border-radius:10px;font-size:15px;outline:none;background:#fdfbfb}
+.btn{width:100%;padding:12px;background:#e57373;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;transition:.3s;margin-bottom:15px}
+.btn:hover{background:#d46060}
+/* 结果区域 */
+.result{display:none;animation:fade .5s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.show-zodiac{text-align:center;font-size:16px;margin-bottom:14px;color:#666}
+.score{text-align:center;font-size:34px;font-weight:bold;color:#e57373;margin:8px 0}
+.level{text-align:center;font-size:16px;padding:4px 16px;background:#fef0f0;color:#d65a5a;border-radius:30px;display:inline-block;margin:0 auto 14px}
+.desc{font-size:15px;color:#444;line-height:1.7;margin-bottom:10px}
+.tip{background:#fff9e6;padding:12px;border-radius:10px;font-size:14px;color:#88683f;line-height:1.6}
+footer{text-align:center;color:#999;font-size:13px;margin-top:30px}
+/* 模块隐藏显示 */
+.module{display:none}
+.module.show{display:block}
+/* 求签样式 */
+.qian-box{text-align:center;padding:20px;background:#fef6f6;border-radius:14px;margin-bottom:15px}
+.qian-num{font-size:22px;font-weight:bold;color:#d65a5a;margin-bottom:8px}
+.qian-ji{font-size:16px;margin-bottom:10px;color:#e57373}
+.qian-poem{font-size:15px;line-height:1.8;margin-bottom:12px;font-style:italic}
+.qian-jie{font-size:14px;color:#444;line-height:1.7;text-align:left}
+/* 黄历样式 */
+.huangli-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+.huangli-item{background:#f8f8f8;padding:12px;border-radius:10px}
+.huangli-item h4{font-size:14px;color:#d65a5a;margin-bottom:6px}
+.huangli-item p{font-size:14px;color:#444;line-height:1.6}
+/* 个人宜忌样式 */
+.person-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+.person-item{background:#fff5f5;padding:14px;border-radius:12px}
+.person-item h4{font-size:15px;color:#d65a5a;margin-bottom:8px}
+.person-item p{font-size:14px;line-height:1.7;color:#444}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>✨综合运势大全</h1>
+<div class="subtitle">星座穿搭｜生肖穿搭｜生肖婚配｜生日婚配｜每日一签｜黄历宜忌｜个人专属宜忌</div>
+</header>
+
+<!-- 标签切换 -->
+<div class="tabs">
+<div class="tab active" data-tab="xz">星座穿搭</div>
+<div class="tab" data-tab="sx">生肖穿搭</div>
+<div class="tab" data-tab="ph">生肖婚配</div>
+<div class="tab" data-tab="birth">生日婚配</div>
+<div class="tab" data-tab="qian">每日一签</div>
+<div class="tab" data-tab="huangli">通用黄历</div>
+<div class="tab" data-tab="person">个人专属宜忌</div>
+</div>
+
+<!-- 1.星座穿搭 -->
+<div class="module show" id="xz">
+<div class="card">
+<div class="title">星座今日运势&穿搭</div>
+<div class="select-row" id="xzList"></div>
+<div class="luck-grid" id="xzLuck"></div>
+<div id="xzWear"></div>
+</div>
+</div>
+
+<!-- 2.生肖穿搭 -->
+<div class="module" id="sx">
+<div class="card">
+<div class="title">生肖今日运势&穿搭</div>
+<div class="select-row" id="sxList"></div>
+<div class="luck-grid" id="sxLuck"></div>
+<div id="sxWear"></div>
+</div>
+</div>
+
+<!-- 3.生肖婚配 -->
+<div class="module" id="ph">
+<div class="card">
+<div class="title">生肖手动婚配</div>
+<div class="form-row">
+<div class="form-col">
+<label>👨男生生肖</label>
+<select id="boySx">
+<option>鼠</option><option>牛</option><option>虎</option><option>兔</option>
+<option>龙</option><option>蛇</option><option>马</option><option>羊</option>
+<option>猴</option><option>鸡</option><option>狗</option><option>猪</option>
+</select>
+</div>
+<div class="form-col">
+<label>👩女生生肖</label>
+<select id="girlSx">
+<option>鼠</option><option>牛</option><option>虎</option><option>兔</option>
+<option>龙</option><option>蛇</option><option>马</option><option>羊</option>
+<option>猴</option><option>鸡</option><option>狗</option><option>猪</option>
+</select>
+</div>
+</div>
+<button class="btn" onclick="checkSXMatch()">立即配对</button>
+<div class="result" id="phResult">
+<div class="level" id="phLevel"></div>
+<div class="score" id="phScore">0</div>
+<div class="desc" id="phDesc"></div>
+<div class="tip" id="phTip"></div>
+</div>
+</div>
+</div>
+
+<!-- 4.生日自动婚配 -->
+<div class="module" id="birth">
+<div class="card">
+<div class="title">出生日期自动婚配</div>
+<div class="form-row">
+<div class="form-col">
+<label>👨男生公历生日</label>
+<input type="date" id="boyBirth">
+</div>
+<div class="form-col">
+<label>👩女生公历生日</label>
+<input type="date" id="girlBirth">
+</div>
+</div>
+<button class="btn" onclick="checkBirthMatch()">测算配对</button>
+<div class="result" id="birthResult">
+<div class="show-zodiac" id="birthZodiac"></div>
+<div class="level" id="birthLevel"></div>
+<div class="score" id="birthScore">0</div>
+<div class="desc" id="birthDesc"></div>
+<div class="tip" id="birthTip"></div>
+</div>
+</div>
+</div>
+
+<!-- 5.每日一签 -->
+<div class="module" id="qian">
+<div class="card">
+<div class="title">🙏 每日一签 · 诚心求签</div>
+<button class="btn" onclick="getQian()">摇一摇求签</button>
+<div class="result" id="qianResult">
+<div class="qian-box">
+<div class="qian-num" id="qianNum"></div>
+<div class="qian-ji" id="qianJi"></div>
+<div class="qian-poem" id="qianPoem"></div>
+<div class="qian-jie" id="qianJie"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 6.通用黄历宜忌 -->
+<div class="module" id="huangli">
+<div class="card">
+<div class="title">📅 今日通用黄历宜忌</div>
+<div class="huangli-grid">
+<div class="huangli-item">
+<h4>📆 今日信息</h4>
+<p id="hlDate"></p>
+<p id="hlChong"></p>
+</div>
+<div class="huangli-item">
+<h4>✅ 宜</h4>
+<p id="hlYi"></p>
+</div>
+<div class="huangli-item">
+<h4>❌ 忌</h4>
+<p id="hlJi"></p>
+</div>
+<div class="huangli-item">
+<h4>⏰ 吉时</h4>
+<p id="hlJiShi"></p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 7.个人专属宜忌（新增） -->
+<div class="module" id="person">
+<div class="card">
+<div class="title">🎯 个人生日专属今日宜忌</div>
+<div class="form-col" style="margin-bottom:16px">
+<label>输入你的公历生日</label>
+<input type="date" id="myBirth">
+</div>
+<button class="btn" onclick="getPersonYiJi()">查询我的专属宜忌</button>
+<div class="result" id="personResult">
+<div class="show-zodiac" id="myZodiacInfo"></div>
+<div class="person-grid">
+<div class="person-item">
+<h4>✅ 今日宜做</h4>
+<p id="myYi"></p>
+</div>
+<div class="person-item">
+<h4>❌ 今日忌做</h4>
+<p id="myJi"></p>
+</div>
+<div class="person-item">
+<h4>🌟 幸运方位&颜色</h4>
+<p id="myLuck"></p>
+</div>
+<div class="person-item">
+<h4>💡 今日专属提醒</h4>
+<p id="myTip"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<footer>民俗仅供娱乐｜珍惜当下缘分</footer>
+</div>
+
+<script>
+// ========== 标签切换 ==========
+document.querySelectorAll('.tab').forEach(t=>{
+t.onclick=()=>{
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+t.classList.add('active');
+const tab=t.dataset.tab;
+document.querySelectorAll('.module').forEach(m=>m.classList.remove('show'));
+document.getElementById(tab).classList.add('show');
+}
+})
+
+// ========== 星座穿搭数据 ==========
+const xzData={
+白羊座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"活力运动风、简约利落",幸运色:"正红、米白",禁忌色:"深蓝、暗灰",材质:"棉、针织",配饰:"银色项链、棒球帽"}},
+金牛座:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐⭐"},wear:{风格:"温柔通勤、质感大地风",幸运色:"卡其、奶咖",禁忌色:"荧光色",材质:"麂皮、羊毛",配饰:"皮质腰带、珍珠耳钉"}},
+双子座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"清新文艺、叠穿混搭",幸运色:"浅黄、薄荷绿",禁忌色:"纯黑",材质:"雪纺、亚麻",配饰:"帆布包、彩色发圈"}},
+巨蟹座:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"温柔居家、软糯舒适",幸运色:"奶白、浅蓝",禁忌色:"亮橙",材质:"纯棉、毛绒",配饰:"温柔耳环、针织围巾"}},
+狮子座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐⭐"},wear:{风格:"气场女王、精致亮眼",幸运色:"金色、橘红",禁忌色:"土色",材质:"丝绒、亮面",配饰:"金属耳环、手拿包"}},
+处女座:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"极简干净、通勤干练",幸运色:"灰色、象牙白",禁忌色:"花哨撞色",材质:"抗皱面料、纯棉",配饰:"细表带手表、简约耳钉"}},
+天秤座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"优雅气质、温柔韩系",幸运色:"淡粉、浅紫",禁忌色:"深绿",材质:"蕾丝、针织",配饰:"珍珠项链、温柔发夹"}},
+天蝎座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"酷飒御姐、神秘高级",幸运色:"黑色、酒红",禁忌色:"浅粉",材质:"皮质、哑光",配饰:"黑色贝雷帽、金属戒指"}},
+射手座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐⭐"},wear:{风格:"休闲自由、街头风",幸运色:"宝蓝、紫色",禁忌色:"米色",材质:"牛仔、运动面料",配饰:"棒球帽、运动鞋"}},
+摩羯座:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"商务简约、稳重知性",幸运色:"藏青、深棕",禁忌色:"亮色",材质:"西装料、羊毛",配饰:"皮质手表、简约胸针"}},
+水瓶座:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",工作:"⭐⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"个性小众、设计感",幸运色:"天蓝、银色",禁忌色:"暖黄",材质:"科技面料、不规则剪裁",配饰:"夸张耳环、透明包包"}},
+双鱼座:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐⭐",工作:"⭐⭐⭐",财运:"⭐⭐⭐"},wear:{风格:"仙气甜美、梦幻温柔",幸运色:"浅紫、海蓝",禁忌色:"正绿",材质:"纱裙、软糯针织",配饰:"水晶耳钉、蕾丝发带"}}
+};
+// 渲染星座
+const xzList=document.getElementById('xzList');
+const xzLuck=document.getElementById('xzLuck');
+const xzWear=document.getElementById('xzWear');
+Object.keys(xzData).forEach((n,i)=>{
+const d=document.createElement('div');d.className='item';d.innerText=n;d.onclick=()=>{
+document.querySelectorAll('#xzList .item').forEach(x=>x.classList.remove('active'));d.classList.add('active');renderXZ(n);
+};xzList.appendChild(d);
+if(i===0){d.classList.add('active');renderXZ(n);}
+})
+function renderXZ(name){
+const o=xzData[name];xzLuck.innerHTML='';
+for(let k in o.luck){xzLuck.innerHTML+=`<div class="luck-item"><div class="label">${k}</div><div class="text">${o.luck[k]}</div></div>`}
+xzWear.innerHTML='';for(let k in o.wear){xzWear.innerHTML+=`<div class="wear-item"><strong>${k}：</strong>${o.wear[k]}</div>`}
+}
+
+// ========== 生肖穿搭数据 ==========
+const sxData={
+鼠:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",事业:"⭐⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐"},wear:{风格:"简约干练、知性通勤",幸运色:"米色、浅蓝",禁忌色:"大红、深绿",材质:"纯棉、真丝",配饰:"细项链、简约耳钉"}},
+牛:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐",事业:"⭐⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"稳重踏实、经典基础款",幸运色:"咖色、藏青",禁忌色:"粉色、浅紫",材质:"牛仔、羊毛",配饰:"皮质手表、帆布包"}},
+虎:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐⭐",健康:"⭐⭐⭐"},wear:{风格:"气场全开、时尚大气",幸运色:"橙色、墨绿",禁忌色:"浅灰、纯白",材质:"皮质、丝绒",配饰:"金属耳环、墨镜"}},
+兔:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"温柔甜美、清新文艺",幸运色:"浅粉、奶白",禁忌色:"深黑、大红",材质:"针织、雪纺",配饰:"珍珠耳钉、发夹"}},
+龙:{luck:{综合:"⭐⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐⭐",财运:"⭐⭐⭐⭐",健康:"⭐⭐⭐"},wear:{风格:"高贵大气、精致正式",幸运色:"金色、朱红",禁忌色:"深蓝、暗紫",材质:"西装料、亮面",配饰:"精致胸针、手拿包"}},
+蛇:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",事业:"⭐⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐"},wear:{风格:"神秘高级、修身显瘦",幸运色:"黑色、酒红",禁忌色:"浅黄、浅绿",材质:"哑光、针织",配饰:"细腰带、复古戒指"}},
+马:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"活力自由、休闲时尚",幸运色:"宝蓝、浅绿",禁忌色:"深咖、土黄",材质:"亚麻、运动面料",配饰:"棒球帽、运动鞋"}},
+羊:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"温柔软糯、淑女风",幸运色:"奶绿、浅紫",禁忌色:"纯黑、亮橙",材质:"毛绒、棉麻",配饰:"温柔耳环、围巾"}},
+猴:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",事业:"⭐⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"灵动个性、潮流混搭",幸运色:"金黄、天蓝",禁忌色:"暗红、深灰",材质:"潮牌面料、牛仔",配饰:"潮流项链、鸭舌帽"}},
+鸡:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐"},wear:{风格:"精致亮眼、时尚吸睛",幸运色:"白色、金色",禁忌色:"深棕、墨绿",材质:"亮面、蕾丝",配饰:"耳环、精致发饰"}},
+狗:{luck:{综合:"⭐⭐⭐",爱情:"⭐⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"忠诚稳重、舒适日常",幸运色:"浅灰、米色",禁忌色:"大红、深蓝",材质:"纯棉、休闲面料",配饰:"简约手链、双肩包"}},
+猪:{luck:{综合:"⭐⭐⭐⭐",爱情:"⭐⭐⭐",事业:"⭐⭐⭐",财运:"⭐⭐⭐⭐",健康:"⭐⭐⭐⭐"},wear:{风格:"慵懒舒适、可爱宽松",幸运色:"浅黄、奶白",禁忌色:"深黑、深紫",材质:"卫衣面料、软糯针织",配饰:"可爱发箍、帆布包"}}
+};
+// 渲染生肖穿搭
+const sxList=document.getElementById('sxList');
+const sxLuck=document.getElementById('sxLuck');
+const sxWear=document.getElementById('sxWear');
+Object.keys(sxData).forEach((n,i)=>{
+const d=document.createElement('div');d.className='item';d.innerText=n;d.onclick=()=>{
+document.querySelectorAll('#sxList .item').forEach(x=>x.classList.remove('active'));d.classList.add('active');renderSX(n);
+};sxList.appendChild(d);
+if(i===0){d.classList.add('active');renderSX(n);}
+})
+function renderSX(name){
+const o=sxData[name];sxLuck.innerHTML='';
+for(let k in o.luck){sxLuck.innerHTML+=`<div class="luck-item"><div class="label">${k}</div><div class="text">${o.luck[k]}</div></div>`}
+sxWear.innerHTML='';for(let k in o.wear){sxWear.innerHTML+=`<div class="wear-item"><strong>${k}：</strong>${o.wear[k]}</div>`}
+}
+
+// ========== 婚配通用数据 ==========
+const matchData={
+鼠:{鼠:{score:70,level:"中上婚配",desc:"双方同属，默契度高，生活和谐，偶尔小争执，整体幸福稳定。",tip:"多包容小脾气，多沟通，感情会越来越深。"},牛:{score:90,level:"上上婚配",desc:"鼠牛相配，天赐良缘，家庭和睦，财运旺盛，是非常理想的一对。",tip:"男主外女主内，互相扶持，一生富贵无忧。"},虎:{score:50,level:"中下婚配",desc:"性格差异较大，容易产生矛盾，相处需要耐心，磨合难度较高。",tip:"学会换位思考，多给对方空间，避免强势争执。"},兔:{score:85,level:"上吉婚配",desc:"鼠兔相合，温柔互补，感情甜蜜，生活安逸，让人羡慕。",tip:"彼此珍惜，用心经营，可白头偕老。"},龙:{score:80,level:"上吉婚配",desc:"聪明与灵气结合，事业家庭双丰收，缘分深厚。",tip:"互相欣赏，共同进步，幸福指数极高。"},蛇:{score:65,level:"中平婚配",desc:"有共同语言，但性格内敛，需要主动表达感情。",tip:"多交流内心想法，不要冷战。"},马:{score:60,level:"中平婚配",desc:"兴趣相投，但节奏不同，需要互相迁就。",tip:"包容彼此习惯，放慢脚步，感情更稳。"},羊:{score:75,level:"中上婚配",desc:"温和相遇，相处轻松，幸福感强。",tip:"简单生活，知足常乐，幸福长久。"},猴:{score:95,level:"极品良缘",desc:"鼠猴相配，天作之合，快乐无忧，财运爱情双丰收。",tip:"天生一对，一生幸福美满。"},鸡:{score:45,level:"下等婚配",desc:"观念不合，容易争吵，相处较累。",tip:"多忍耐少计较，否则感情易出现裂痕。"},狗:{score:70,level:"中上婚配",desc:"忠诚相遇，信任度高，家庭安稳。",tip:"真诚相待，一生相伴。"},猪:{score:85,level:"上吉婚配",desc:"快乐组合，无忧无虑，生活富足。",tip:"互相宠爱，幸福一生。"}},
+牛:{鼠:{score:90,level:"上上婚配",desc:"牛鼠相配，大吉大利，富贵双全，家庭幸福。",tip:"同心协力，一生顺风顺水。"},牛:{score:65,level:"中平婚配",desc:"性格稳重，生活平淡安稳，缺少浪漫。",tip:"偶尔制造惊喜，感情更甜蜜。"},虎:{score:85,level:"上吉婚配",desc:"互补型伴侣，事业顺利，家庭兴旺。",tip:"互相成就，富贵荣华。"},兔:{score:70,level:"中上婚配",desc:"温和安稳，知足常乐，小幸福满满。",tip:"简单生活，安稳度日。"},龙:{score:55,level:"中下婚配",desc:"气场不合，容易有压力，相处不易。",tip:"多包容理解，减少控制欲。"},蛇:{score:90,level:"上上婚配",desc:"牛蛇相合，福禄双全，缘分极深。",tip:"一生相守，富贵安康。"},马:{score:40,level:"下等婚配",desc:"性格相冲，矛盾较多，很难长久。",tip:"若非深爱，慎重选择。"},羊:{score:95,level:"极品良缘",desc:"牛羊相配，幸福美满，衣食无忧，天赐佳缘。",tip:"天生一对，幸福一生。"},猴:{score:60,level:"中平婚配",desc:"生活有欢乐，但也有小摩擦。",tip:"互相迁就，快乐长久。"},鸡:{score:80,level:"上吉婚配",desc:"勤奋相遇，事业家庭双丰收。",tip:"共同努力，日子越过越好。"},狗:{score:75,level:"中上婚配",desc:"踏实安稳，信任度高，家庭和睦。",tip:"真诚相伴，一生安稳。"},猪:{score:80,level:"上吉婚配",desc:"安逸组合，生活富足，幸福快乐。",tip:"互相照顾，幸福美满。"}},
+虎:{鼠:{score:50,level:"中下婚配",desc:"性格冲突明显，相处需要极大耐心。",tip:"学会退让，避免硬碰硬。"},牛:{score:85,level:"上吉婚配",desc:"虎牛相配，事业有成，家庭兴旺。",tip:"互相扶持，富贵双全。"},虎:{score:45,level:"下等婚配",desc:"两强相遇，争执不断，很难和谐。",tip:"必须有一方学会示弱。"},兔:{score:90,level:"上上婚配",desc:"虎兔相合，温柔互补，天赐良缘。",tip:"一生甜蜜，幸福无忧。"},龙:{score:95,level:"极品良缘",desc:"龙虎相配，气势如虹，事业巅峰，家庭富贵。",tip:"天作之合，大富大贵。"},蛇:{score:40,level:"下等婚配",desc:"互相猜忌，矛盾重重，不易长久。",tip:"多信任少怀疑，否则难白头。"},马:{score:90,level:"上上婚配",desc:"虎马相合，活力满满，幸福自由。",tip:"快乐相伴，一生顺遂。"},羊:{score:85,level:"上吉婚配",desc:"温柔相遇，和谐美满，幸福安康。",tip:"互相宠爱，白头偕老。"},猴:{score:80,level:"上吉婚配",desc:"趣味相投，生活充满欢乐。",tip:"开心相处，幸福长久。"},鸡:{score:65,level:"中平婚配",desc:"有共同目标，但性格需要磨合。",tip:"多沟通少指责。"},狗:{score:90,level:"上上婚配",desc:"忠诚与勇气结合，家庭稳固，幸福一生。",tip:"天生一对，不离不弃。"},猪:{score:75,level:"中上婚配",desc:"相处轻松，生活愉快，安稳幸福。",tip:"珍惜缘分，快乐生活。"}},
+兔:{鼠:{score:85,level:"上吉婚配",desc:"鼠兔相配，温柔甜蜜，安逸幸福。",tip:"互相体贴，一生幸福。"},牛:{score:70,level:"中上婚配",desc:"稳重温柔，生活安稳，幸福感强。",tip:"简单生活，快乐相伴。"},虎:{score:90,level:"上上婚配",desc:"兔虎相合，天赐良缘，家庭和睦。",tip:"一生甜蜜，白头偕老。"},兔:{score:75,level:"中上婚配",desc:"默契十足，温柔相处，幸福安稳。",tip:"互相理解，幸福长久。"},龙:{score:80,level:"上吉婚配",desc:"灵气结合，生活美满，事业顺利。",tip:"互相成就，幸福安康。"},蛇:{score:90,level:"上上婚配",desc:"兔蛇相配，智慧相遇，福禄双全。",tip:"天作之合，一生无忧。"},马:{score:75,level:"中上婚配",desc:"相处和谐，快乐自由，感情稳定。",tip:"珍惜彼此，幸福一生。"},羊:{score:95,level:"极品良缘",desc:"兔羊相配，温柔至极，幸福美满，神仙眷侣。",tip:"天生一对，白头到老。"},猴:{score:65,level:"中平婚配",desc:"性格有差异，需要互相包容。",tip:"多迁就，感情更稳固。"},鸡:{score:90,level:"上上婚配",desc:"勤奋温柔结合，家庭兴旺，衣食无忧。",tip:"共同努力，幸福美满。"},狗:{score:85,level:"上吉婚配",desc:"温柔忠诚，信任度高，家庭幸福。",tip:"真诚相伴，一生安稳。"},猪:{score:90,level:"上上婚配",desc:"安逸快乐，无忧无虑，幸福美满。",tip:"互相宠爱，一生顺遂。"}},
+龙:{鼠:{score:80,level:"上吉婚配",desc:"龙鼠相配，聪明能干，事业家庭双丰收。",tip:"互相欣赏，富贵双全。"},牛:{score:55,level:"中下婚配",desc:"气场不合，相处压力较大，需要磨合。",tip:"多理解少控制。"},虎:{score:95,level:"极品良缘",desc:"龙虎相合，气势非凡，大富大贵，事业巅峰。",tip:"天作之合，一生辉煌。"},兔:{score:80,level:"上吉婚配",desc:"灵气温柔结合，幸福安逸，家庭和睦。",tip:"互相珍惜，白头偕老。"},龙:{score:60,level:"中平婚配",desc:"强强联手，事业强，但家庭易有争执。",tip:"多让一步，家庭更和谐。"},蛇:{score:85,level:"上吉婚配",desc:"龙蛇相配，智慧双全，财运旺盛。",tip:"共同进步，富贵无忧。"},马:{score:85,level:"上吉婚配",desc:"活力与气场结合，事业顺利，家庭幸福。",tip:"互相支持，一生顺遂。"},羊:{score:90,level:"上上婚配",desc:"龙羊相合，福气满满，家庭兴旺，幸福安康。",tip:"天赐良缘，一生富贵。"},猴:{score:80,level:"上吉婚配",desc:"聪明相遇，生活充满乐趣，事业顺利。",tip:"快乐相伴，幸福长久。"},鸡:{score:95,level:"极品良缘",desc:"龙凤相配，大吉大利，荣华富贵，幸福美满。",tip:"天生一对，一生辉煌。"},狗:{score:60,level:"中平婚配",desc:"观念不同，需要互相包容。",tip:"多沟通，减少矛盾。"},猪:{score:85,level:"上吉婚配",desc:"福气满满，生活富足，家庭幸福。",tip:"互相照顾，一生顺遂。"}},
+蛇:{鼠:{score:65,level:"中平婚配",desc:"有默契，但都较内敛，感情需要主动。",tip:"多表达爱意，不要冷战。"},牛:{score:90,level:"上上婚配",desc:"蛇牛相配，福禄双全，富贵安康，天赐良缘。",tip:"一生相守，家庭兴旺。"},虎:{score:40,level:"下等婚配",desc:"性格相冲，猜忌多，不易长久。",tip:"多信任，少计较，否则难白头。"},兔:{score:90,level:"上上婚配",desc:"蛇兔相合，智慧温柔，幸福美满。",tip:"天作之合，一生无忧。"},龙:{score:85,level:"上吉婚配",desc:"智慧结合，事业顺利，财运旺盛。",tip:"互相成就，富贵双全。"},蛇:{score:70,level:"中上婚配",desc:"默契度高，生活安稳，平淡幸福。",tip:"互相理解，安稳度日。"},马:{score:80,level:"上吉婚配",desc:"互补型伴侣，生活充满乐趣。",tip:"互相扶持，幸福长久。"},羊:{score:85,level:"上吉婚配",desc:"温柔相遇，和谐美满，幸福感强。",tip:"珍惜缘分，白头偕老。"},猴:{score:50,level:"中下婚配",desc:"性格差异大，容易有矛盾。",tip:"多包容，少争执。"},鸡:{score:90,level:"上上婚配",desc:"蛇鸡相配，大吉大利，财运旺盛，家庭幸福。",tip:"天赐良缘，一生富贵。"},狗:{score:75,level:"中上婚配",desc:"忠诚信任，相处安稳，家庭和睦。",tip:"真诚相伴，一生安稳。"},猪:{score:80,level:"上吉婚配",desc:"安逸幸福，生活富足，快乐无忧。",tip:"互相宠爱，一生顺遂。"}},
+马:{鼠:{score:60,level:"中平婚配",desc:"兴趣相投，但生活节奏不同。",tip:"互相迁就，感情更稳。"},牛:{score:40,level:"下等婚配",desc:"性格相冲，矛盾多，很难和谐。",tip:"若非深爱，慎重选择。"},虎:{score:90,level:"上上婚配",desc:"马虎相合，活力自由，幸福美满。",tip:"快乐相伴，一生顺遂。"},兔:{score:75,level:"中上婚配",desc:"温柔自由结合，相处轻松愉快。",tip:"珍惜彼此，幸福长久。"},龙:{score:85,level:"上吉婚配",desc:"气场活力结合，事业家庭双丰收。",tip:"互相支持，富贵双全。"},蛇:{score:80,level:"上吉婚配",desc:"互补相处，生活安稳，幸福感强。",tip:"互相理解，幸福安康。"},马:{score:70,level:"中上婚配",desc:"志同道合，快乐自由，生活充满阳光。",tip:"互相包容，快乐一生。"},羊:{score:90,level:"上上婚配",desc:"马羊相配，天作之合，幸福美满，衣食无忧。",tip:"天生一对，一生顺遂。"},猴:{score:85,level:"上吉婚配",desc:"趣味相投，生活充满欢乐，自由幸福。",tip:"开心相处，白头偕老。"},鸡:{score:55,level:"中下婚配",desc:"观念不合，容易有小摩擦。",tip:"多沟通，少计较。"},狗:{score:80,level:"上吉婚配",desc:"忠诚自由结合，家庭安稳，幸福快乐。",tip:"真诚相伴，一生幸福。"},猪:{score:75,level:"中上婚配",desc:"安逸快乐，相处轻松，生活美满。",tip:"互相照顾，幸福一生。"}},
+羊:{鼠:{score:75,level:"中上婚配",desc:"温柔相遇，相处轻松，幸福感强。",tip:"简单生活，知足常乐。"},牛:{score:95,level:"极品良缘",desc:"羊牛相配，幸福美满，衣食无忧，天赐佳缘。",tip:"天生一对，一生富贵。"},虎:{score:85,level:"上吉婚配",desc:"羊虎相合，温柔互补，家庭和睦。",tip:"互相宠爱，白头偕老。"},兔:{score:95,level:"极品良缘",desc:"羊兔相配，温柔至极，神仙眷侣，幸福美满。",tip:"天作之合，一生甜蜜。"},龙:{score:90,level:"上上婚配",desc:"羊龙相合，福气满满，家庭兴旺，富贵安康。",tip:"天赐良缘，一生顺遂。"},蛇:{score:85,level:"上吉婚配",desc:"温柔智慧结合，相处和谐，幸福安逸。",tip:"互相珍惜，幸福长久。"},马:{score:90,level:"上上婚配",desc:"羊马相配，天作之合，快乐自由，幸福美满。",tip:"天生一对，一生无忧。"},羊:{score:75,level:"中上婚配",desc:"温柔相处，默契十足，生活安稳。",tip:"互相理解，安稳度日。"},猴:{score:70,level:"中上婚配",desc:"生活有欢乐，性格需要小磨合。",tip:"互相迁就，快乐一生。"},鸡:{score:80,level:"上吉婚配",desc:"温柔勤奋结合，家庭兴旺，衣食无忧。",tip:"共同努力，幸福美满。"},狗:{score:95,level:"极品良缘",desc:"羊狗相配，忠诚温柔，天赐良缘，家庭幸福美满。",tip:"天生一对，白头偕老。"},猪:{score:90,level:"上上婚配",desc:"安逸温柔结合，生活富足，幸福快乐。",tip:"互相宠爱，一生顺遂。"}},
+猴:{鼠:{score:95,level:"极品良缘",desc:"猴鼠相配，天作之合，快乐无忧，财运爱情双丰收。",tip:"天生一对，幸福美满。"},牛:{score:60,level:"中平婚配",desc:"生活有欢乐，但性格需要磨合。",tip:"互相迁就，感情更稳。"},虎:{score:80,level:"上吉婚配",desc:"趣味相投，生活充满欢乐，幸福自由。",tip:"开心相处，幸福长久。"},兔:{score:65,level:"中平婚配",desc:"有差异，但可以慢慢磨合。",tip:"多包容，少指责。"},龙:{score:80,level:"上吉婚配",desc:"聪明相遇，事业顺利，生活愉快。",tip:"互相支持，共同进步。"},蛇:{score:50,level:"中下婚配",desc:"性格不合，容易有矛盾。",tip:"多沟通，少冷战。"},马:{score:85,level:"上吉婚配",desc:"自由快乐结合，生活充满阳光。",tip:"开心相伴，幸福一生。"},羊:{score:70,level:"中上婚配",desc:"温柔欢乐相遇，相处轻松愉快。",tip:"珍惜缘分，快乐生活。"},猴:{score:65,level:"中平婚配",desc:"聪明机灵，生活有趣，但易有小争执。",tip:"互相让一步，更幸福。"},鸡:{score:85,level:"上吉婚配",desc:"猴鸡相配，事业顺利，家庭幸福。",tip:"互相成就，富贵双全。"},狗:{score:75,level:"中上婚配",desc:"忠诚快乐结合，家庭安稳，幸福。",tip:"真诚相伴，一生顺遂。"},猪:{score:80,level:"上吉婚配",desc:"安逸快乐，生活富足，无忧无虑。",tip:"互相照顾，幸福美满。"}},
+鸡:{鼠:{score:45,level:"下等婚配",desc:"观念不合，容易争吵，相处较累。",tip:"多忍耐少计较，否则易有裂痕。"},牛:{score:80,level:"上吉婚配",desc:"鸡牛相配，勤奋努力，事业家庭双丰收。",tip:"共同努力，日子越过越好。"},虎:{score:65,level:"中平婚配",desc:"有目标，但性格需要磨合。",tip:"多沟通，少强势。"},兔:{score:90,level:"上上婚配",desc:"鸡兔相合，温柔勤奋，家庭兴旺，幸福美满。",tip:"天赐良缘，一生无忧。"},龙:{score:95,level:"极品良缘",desc:"鸡龙相配，龙凤呈祥，荣华富贵，大吉大利。",tip:"天作之合，一生辉煌。"},蛇:{score:90,level:"上上婚配",desc:"鸡蛇相配，大吉大利，财运旺盛，家庭幸福。",tip:"天赐良缘，一生富贵。"},马:{score:55,level:"中下婚配",desc:"观念不同，容易有小摩擦。",tip:"多理解，少计较。"},羊:{score:80,level:"上吉婚配",desc:"勤奋温柔结合，家庭和睦，衣食无忧。",tip:"互相珍惜，幸福美满。"},猴:{score:85,level:"上吉婚配",desc:"鸡猴相合，事业顺利，生活充满乐趣。",tip:"互相支持，幸福长久。"},鸡:{score:60,level:"中平婚配",desc:"勤奋能干，但易有争执，需要包容。",tip:"多让一步，家庭更和谐。"},狗:{score:70,level:"中上婚配",desc:"忠诚勤奋，家庭安稳，生活幸福。",tip:"真诚相伴，一生安稳。"},猪:{score:75,level:"中上婚配",desc:"安逸生活，相处轻松，幸福快乐。",tip:"互相宠爱，一生顺遂。"}},
+狗:{鼠:{score:70,level:"中上婚配",desc:"忠诚相遇，信任度高，家庭安稳幸福。",tip:"真诚相待，一生相伴。"},牛:{score:75,level:"中上婚配",desc:"踏实忠诚，生活安稳，家庭和睦。",tip:"互相扶持，一生无忧。"},虎:{score:90,level:"上上婚配",desc:"狗虎相配，忠诚勇气，家庭稳固，幸福一生。",tip:"天生一对，不离不弃。"},兔:{score:85,level:"上吉婚配",desc:"温柔忠诚，信任度高，家庭幸福美满。",tip:"真诚相伴，一生安稳。"},龙:{score:60,level:"中平婚配",desc:"观念不同，需要互相包容理解。",tip:"多沟通，减少矛盾。"},蛇:{score:75,level:"中上婚配",desc:"忠诚信任，相处安稳，家庭和睦。",tip:"互相理解，幸福安康。"},马:{score:80,level:"上吉婚配",desc:"忠诚自由结合，家庭安稳，幸福快乐。",tip:"真诚相伴，一生幸福。"},羊:{score:95,level:"极品良缘",desc:"狗羊相配，忠诚温柔，天赐良缘，家庭幸福美满。",tip:"天生一对，白头偕老。"},猴:{score:75,level:"中上婚配",desc:"快乐忠诚，生活充满乐趣，安稳。",tip:"互相迁就，幸福一生。"},鸡:{score:70,level:"中上婚配",desc:"勤奋忠诚，家庭安稳，生活顺利。",tip:"互相支持，日子红火。"},狗:{score:80,level:"上吉婚配",desc:"忠诚相遇，信任无比，家庭稳固。",tip:"一生相伴，不离不弃。"},猪:{score:90,level:"上上婚配",desc:"狗猪相配，安逸忠诚，幸福快乐，衣食无忧。",tip:"天生一对，一生顺遂。"}},
+猪:{鼠:{score:85,level:"上吉婚配",desc:"猪鼠相配，快乐富足，无忧无虑，幸福美满。",tip:"互相宠爱，幸福一生。"},牛:{score:80,level:"上吉婚配",desc:"安逸稳重，生活富足，家庭幸福。",tip:"互相照顾，一生顺遂。"},虎:{score:75,level:"中上婚配",desc:"相处轻松愉快，生活幸福安稳。",tip:"珍惜缘分，快乐生活。"},兔:{score:90,level:"上上婚配",desc:"猪兔相合，安逸快乐，幸福美满，无忧无虑。",tip:"互相宠爱，一生顺遂。"},龙:{score:85,level:"上吉婚配",desc:"福气气场结合，生活富足，家庭兴旺。",tip:"互相珍惜，富贵安康。"},蛇:{score:80,level:"上吉婚配",desc:"安逸智慧结合，生活幸福，安稳度日。",tip:"互相照顾，幸福美满。"},马:{score:75,level:"中上婚配",desc:"安逸自由，相处轻松，生活愉快。",tip:"互相包容，快乐一生。"},羊:{score:90,level:"上上婚配",desc:"猪羊相配，温柔安逸，幸福美满，衣食无忧。",tip:"天生一对，一生顺遂。"},猴:{score:80,level:"上吉婚配",desc:"快乐安逸结合，生活充满乐趣。",tip:"开心相处，幸福长久。"},鸡:{score:75,level:"中上婚配",desc:"安逸勤奋，生活富足，家庭幸福。",tip:"互相支持，日子红火。"},狗:{score:90,level:"上上婚配",desc:"猪狗相配，安逸忠诚，幸福快乐，天赐良缘。",tip:"天生一对，一生顺遂。"},猪:{score:85,level:"上吉婚配",desc:"安逸相遇，生活富足，快乐无忧，幸福美满。",tip:"互相宠爱，一生顺遂。"}}
+};
+
+// 生肖手动婚配
+function checkSXMatch(){
+const b=document.getElementById('boySx').value;
+const g=document.getElementById('girlSx').value;
+const r=matchData[b][g];
+document.getElementById('phLevel').innerText=r.level;
+document.getElementById('phScore').innerText=r.score+" 分";
+document.getElementById('phDesc').innerText=r.desc;
+document.getElementById('phTip').innerText="💡相处建议："+r.tip;
+document.getElementById('phResult').style.display='block';
+}
+
+// 公历转生肖
+function getZodiac(y){
+const arr=["鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"];
+return arr[(y-4)%12];
+}
+
+// 生日自动婚配
+function checkBirthMatch(){
+const bB=document.getElementById('boyBirth').value;
+const gB=document.getElementById('girlBirth').value;
+if(!bB||!gB){alert("请选择双方生日！");return;}
+const by=new Date(bB).getFullYear();
+const gy=new Date(gB).getFullYear();
+const bz=getZodiac(by);
+const gz=getZodiac(gy);
+const r=matchData[bz][gz];
+document.getElementById('birthZodiac').innerText=`男生：${by}年【${bz}】 女生：${gy}年【${gz}】`;
+document.getElementById('birthLevel').innerText=r.level;
+document.getElementById('birthScore').innerText=r.score+" 分";
+document.getElementById('birthDesc').innerText=r.desc;
+document.getElementById('birthTip').innerText="💡相处建议："+r.tip;
+document.getElementById('birthResult').style.display='block';
+}
+
+// ========== 每日一签 数据 ==========
+const qianList = [
+  {num:"第一签",ji:"上上签",poem:"云开日出正分明，万物逢春气象新。 久困今朝逢吉运，求财谋事总成真。",jie:"运势大吉，苦尽甘来，事业财运感情皆向好，大胆行动即可如愿。"},
+  {num:"第二签",ji:"上吉签",poem:"春风送暖入家门，好事连连福满盆。 心善自有天庇佑，平安喜乐万事顺。",jie:"近期贵人运旺，适合社交、合作、表白，生活顺心，烦恼消散。"},
+  {num:"第三签",ji:"中签",poem:"浮云遮日暂迷茫，静待清风扫四方。 守得初心莫急躁，时来运转自安康。",jie:"平稳过渡期，不宜冲动决策，耐心等待，保持现状，后续会好转。"},
+  {num:"第四签",ji:"下签",poem:"细雨绵绵路未平，是非琐碎扰心情。 收敛锋芒少争执，静待云开再前行。",jie:"近期易有小是非、压力，低调行事，不与人争，保护好自己情绪。"},
+  {num:"第五签",ji:"上上签",poem:"顺水行舟事事通，花开富贵运兴隆。 良缘偶遇知音伴，福禄双全乐无穷。",jie:"事业顺利，感情甜蜜，财运提升，适合恋爱、结婚、升职、投资。"},
+  {num:"第六签",ji:"上吉签",poem:"吉光入户福绵长，稳步前行不慌张。 付出皆能有回报，平安顺遂福安康。",jie:"稳中求进，努力就有收获，健康平安，家庭和睦。"},
+  {num:"第七签",ji:"中签",poem:"世事浮沉本自然，得失看淡心自安。 不求富贵求安稳，平淡生活亦清欢。",jie:"运势平平，无大灾大喜，知足常乐，专注当下即可。"},
+  {num:"第八签",ji:"下下签",poem:"狂风骤雨一时来，莫叹流年多坎坷。 修身养性积善德，雨过天晴好运来。",jie:"短期压力较大，易受挫，适合沉淀自己，行善积德，等待转机。"}
+];
+function getQian(){
+const random=Math.floor(Math.random()*qianList.length);
+const q=qianList[random];
+document.getElementById('qianNum').innerText=q.num;
+document.getElementById('qianJi').innerText=q.ji;
+document.getElementById('qianPoem').innerText=q.poem;
+document.getElementById('qianJie').innerText="解签："+q.jie;
+document.getElementById('qianResult').style.display='block';
+}
+
+// ========== 今日通用黄历自动生成 ==========
+const today=new Date();
+const y=today.getFullYear();
+const m=today.getMonth()+1;
+const d=today.getDate();
+const weekArr=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+const week=weekArr[today.getDay()];
+const chongList=["冲鼠煞北","冲牛煞西","冲虎煞南","冲兔煞东","冲龙煞北","冲蛇煞西","冲马煞南","冲羊煞东","冲猴煞北","冲鸡煞西","冲狗煞南","冲猪煞东"];
+const yiList=["祭祀、祈福、出行、纳财、开市、订婚、嫁娶、求医、搬家、安床","开业、签约、求职、面试、聚会、送礼、置业、装修、入学"];
+const jiList=["安葬、破土、动土、打官司、争吵、大额投资、远行冒险、借贷"];
+const jishiList=["子时(23-1)、丑时(1-3)、辰时(7-9)、巳时(9-11)、午时(11-13)"];
+
+document.getElementById('hlDate').innerText=`${y}年${m}月${d}日 ${week}`;
+document.getElementById('hlChong').innerText=chongList[Math.floor(Math.random()*12)];
+document.getElementById('hlYi').innerText=yiList[0];
+document.getElementById('hlJi').innerText=jiList[0];
+document.getElementById('hlJiShi').innerText=jishiList[0];
+
+// ========== 新增：个人生日专属宜忌 ==========
+const personYiJi = {
+  鼠:{
+    yi:"谈合作、签合同、社交、求财、表白、出行",
+    ji:"与人争执、大额冲动消费、熬夜、搬家、远行",
+    luck:"幸运方位：正北｜幸运色：米色、浅蓝",
+    tip:"今日宜稳重，抓住人际机会，避免情绪化决策。"
+  },
+  牛:{
+    yi:"居家休息、整理内务、理财、学习、健身",
+    ji:"急躁行事、与人争辩、冒险投资、熬夜加班",
+    luck:"幸运方位：东北｜幸运色：咖色、藏青",
+    tip:"稳扎稳打，不急于求成，积蓄能量为佳。"
+  },
+  虎:{
+    yi:"主动出击、谈业务、面试、拓展人脉、约会",
+    ji:"硬碰硬吵架、冲动决策、高调炫耀、赌博",
+    luck:"幸运方位：正东｜幸运色：橙色、墨绿",
+    tip:"气场全开，但收敛脾气，贵人运极强。"
+  },
+  兔:{
+    yi:"护肤养生、逛街购物、休闲放松、维系感情",
+    ji:"激烈争吵、重大变动、冒险、熬夜伤身",
+    luck:"幸运方位：东南｜幸运色：浅粉、奶白",
+    tip:"温柔待人，适合享受生活，不宜折腾。"
+  },
+  龙:{
+    yi:"升职规划、谈大项目、签约、表白、创业布局",
+    ji:"意气用事、和上级顶撞、盲目扩张、挥霍",
+    luck:"幸运方位：正南｜幸运色：金色、朱红",
+    tip:"今日气场强大，适合做重要决定。"
+  },
+  蛇:{
+    yi:"深度思考、复盘计划、独处、理财、暗中布局",
+    ji:"公开争吵、冲动表白、高调行事、轻信他人",
+    luck:"幸运方位：西南｜幸运色：黑色、酒红",
+    tip:"低调内敛，谋定而后动，静待时机。"
+  },
+  马:{
+    yi:"出行游玩、运动健身、社交聚会、拓展人脉",
+    ji:"久坐不动、纠结内耗、感情冷战、拖延",
+    luck:"幸运方位：正西｜幸运色：宝蓝、浅绿",
+    tip:"动起来运势更好，别宅家胡思乱想。"
+  },
+  羊:{
+    yi:"陪伴家人、温柔沟通、手工、养生、下午茶",
+    ji:"钻牛角尖、情绪内耗、和家人吵架、熬夜",
+    luck:"幸运方位：西北｜幸运色：奶绿、浅紫",
+    tip:"心软善良，别委屈自己，放松心情最重要。"
+  },
+  猴:{
+    yi:"创意工作、社交玩乐、学习新技能、兼职搞钱",
+    ji:"浮躁散漫、半途而废、撒谎、冲动消费",
+    luck:"幸运方位：正北｜幸运色：金黄、天蓝",
+    tip:"头脑灵活，抓住机会，做事要有始有终。"
+  },
+  鸡:{
+    yi:"打扮精致、约会、谈合作、展示自我、理财",
+    ji:"八卦是非、嘴碎吐槽、与人攀比、情绪化",
+    luck:"幸运方位：正东｜幸运色：白色、金色",
+    tip:"保持优雅，少管闲事，贵人自然来。"
+  },
+  狗:{
+    yi:"陪伴亲友、踏实工作、储蓄、居家、忠诚待人",
+    ji:"猜忌多疑、与人冷战、冲动离职、赌气",
+    luck:"幸运方位：东北｜幸运色：浅灰、米色",
+    tip:"忠诚稳重，相信自己，别胡思乱想。"
+  },
+  猪:{
+    yi:"享受美食、休息放松、恋爱约会、轻松工作",
+    ji:"暴饮暴食、摆烂躺平、逃避问题、拖延",
+    luck:"幸运方位：正南｜幸运色：浅黄、奶白",
+    tip:"福气满满，开心最重要，适度自律更佳。"
+  }
+};
+
+function getPersonYiJi(){
+  const birth = document.getElementById("myBirth").value;
+  if(!birth){alert("请选择你的公历生日！");return;}
+  const year = new Date(birth).getFullYear();
+  const zodiac = getZodiac(year);
+  const info = personYiJi[zodiac];
+
+  document.getElementById("myZodiacInfo").innerText = `你的生肖：${zodiac}｜今日专属运势宜忌`;
+  document.getElementById("myYi").innerText = info.yi;
+  document.getElementById("myJi").innerText = info.ji;
+  document.getElementById("myLuck").innerText = info.luck;
+  document.getElementById("myTip").innerText = info.tip;
+  document.getElementById("personResult").style.display = "block";
+}
+</script>
+</body>
+</html>
